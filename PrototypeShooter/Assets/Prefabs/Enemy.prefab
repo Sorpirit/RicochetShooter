@@ -187,3 +187,5 @@ MonoBehaviour:
   scores: 100
   addPointsText: {fileID: 2581191245938409869, guid: aa35473a69255474c83ac413d398d522,
     type: 3}
+  useBulletReflectCount: 1
+  maxReflectionCount: 5

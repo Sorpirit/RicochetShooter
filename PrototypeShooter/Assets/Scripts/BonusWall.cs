@@ -8,13 +8,26 @@ public class BonusWall : MonoBehaviour
 {
     [SerializeField] private int scores;
     [SerializeField] private FloatinPopup addPointsText;
-    
-    
+    [SerializeField] private bool useBulletReflectCount;
+    [SerializeField] private float maxReflectionCount;
+
     private void OnCollisionEnter2D(Collision2D other)
     {
-        GameObject popup = Instantiate(addPointsText.gameObject, other.contacts[0].point, Quaternion.identity);
-        FloatinPopup popupContent = popup.GetComponent<FloatinPopup>();
-        popupContent.SetText("+" + scores);
-        PlayerScores.instace.AddScores(scores);
+
+        if (other.gameObject.TryGetComponent(out BulletController bullet))
+        {
+            float scoresMultiplier = 0;
+            
+            if(useBulletReflectCount)
+                scoresMultiplier = Mathf.Clamp(bullet.ReflectCount, 0, maxReflectionCount) / maxReflectionCount;
+            
+            int addScores = (int) (scores * (1 + scoresMultiplier));
+            
+            GameObject popup = Instantiate(addPointsText.gameObject, other.contacts[0].point, Quaternion.identity);
+            FloatinPopup popupContent = popup.GetComponent<FloatinPopup>();
+            popupContent.SetText("+" + addScores);
+            PlayerScores.instace.AddScores(addScores);
+        }
+        
     }
 }

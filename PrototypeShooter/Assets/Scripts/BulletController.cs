@@ -11,13 +11,16 @@ public class BulletController : MonoBehaviour
     [SerializeField] private AudioClip hitBonusWall;
     [SerializeField] private GameObject bulletExpierdEffect;
     [SerializeField] private CinemachineImpulseSource impulseSource;
+    [SerializeField] private Gradient hotBulletGradient;
+    [SerializeField] private SpriteRenderer bulletSprite;
+
+    public int ReflectCount => reflectCount;
 
     private AudioSource source;
     private int reflectCount;
 
     private void Start()
     {
-        reflectCount = maxReflectCount;
         source = GetComponent<AudioSource>();
     }
 
@@ -29,19 +32,18 @@ public class BulletController : MonoBehaviour
             {
                 source.clip = hitBonusWall;
                 impulseSource.GenerateImpulse();
-                reflectCount += 2;
+                reflectCount ++;
             }
             else
             {
-                
                 source.clip = hitWall;
-                //source.PlayOneShot(hitWall);
             }
             source.Play();
             
-            reflectCount--;
+            reflectCount++;
+            bulletSprite.color = hotBulletGradient.Evaluate((float)reflectCount/maxReflectCount);
 
-            if (reflectCount <= 0)
+            if (reflectCount >= maxReflectCount)
             {
                 Instantiate(bulletExpierdEffect, transform.position, Quaternion.identity);
                 Die();

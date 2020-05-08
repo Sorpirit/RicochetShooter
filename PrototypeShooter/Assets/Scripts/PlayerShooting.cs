@@ -33,14 +33,14 @@ public class PlayerShooting : MonoBehaviour
         {
             currentBullets = value;
             currentBullets = Mathf.Clamp(currentBullets, 0, maxBulets); 
-            bulletCountUi.SetBulletsActiveAmount(currentBullets);
+            bulletCountUi?.SetBulletsActiveAmount(currentBullets);
         }
     }
 
     private void Start()
     {
         currentBullets = maxBulets;
-        bulletCountUi.SetBulletsActiveAmount(currentBullets);
+        bulletCountUi?.SetBulletsActiveAmount(currentBullets);
         
         cam = Camera.main;
     }
@@ -76,7 +76,7 @@ public class PlayerShooting : MonoBehaviour
         soundsAudio.Play();
         
         currentBullets--;
-        bulletCountUi.SetBulletsActiveAmount(currentBullets);
+        bulletCountUi?.SetBulletsActiveAmount(currentBullets);
         
         playerAnimator?.SetTrigger("Shoot");
     }
