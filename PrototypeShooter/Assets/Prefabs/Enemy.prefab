@@ -84,6 +84,7 @@ GameObject:
   - component: {fileID: 8722052557370406898}
   - component: {fileID: 8722052557370406899}
   - component: {fileID: 8722052557370406900}
+  - component: {fileID: 2031940666468961694}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -98,7 +99,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8722052557370406902}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.37, y: -3.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -189,3 +190,18 @@ MonoBehaviour:
     type: 3}
   useBulletReflectCount: 1
   maxReflectionCount: 5
+--- !u!114 &2031940666468961694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8722052557370406902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12df53836d64b86ac51d8c2a6f6f353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyExploded: {fileID: 2250913609866950742, guid: f234fa65a3cbec742a155aee34f455d7,
+    type: 3}
+  addXPEffect: {fileID: 0}

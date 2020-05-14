@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BulletController : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class BulletController : MonoBehaviour
     [SerializeField] private CinemachineImpulseSource impulseSource;
     [SerializeField] private Gradient hotBulletGradient;
     [SerializeField] private SpriteRenderer bulletSprite;
+    [SerializeField] private GameObject bulletHole;
+    [SerializeField] private TrailRenderer bulletTrail;
 
     public int ReflectCount => reflectCount;
 
@@ -36,12 +39,27 @@ public class BulletController : MonoBehaviour
             }
             else
             {
+                Instantiate(bulletHole, transform.position, Quaternion.Euler(0,0,Random.Range(0,360)));
+                source.pitch = 1f + 1.25f*reflectCount / maxReflectCount;
                 source.clip = hitWall;
             }
             source.Play();
             
             reflectCount++;
-            bulletSprite.color = hotBulletGradient.Evaluate((float)reflectCount/maxReflectCount);
+            Color newBulletColor = hotBulletGradient.Evaluate((float) reflectCount / maxReflectCount);
+            bulletSprite.color = newBulletColor;
+
+            // Gradient newGrad = new Gradient();
+            // GradientColorKey colorKey = new GradientColorKey {color = newBulletColor,time = 0f};
+            // GradientColorKey colorKeyEnd = new GradientColorKey {color = Color.white,time = 1f};
+            // newGrad.SetKeys(new[]{colorKey,colorKeyEnd},bulletTrail.colorGradient.alphaKeys);
+            newBulletColor.r *= .25f;
+            newBulletColor.g *= .25f;
+            newBulletColor.b *= .25f;
+            newBulletColor.a = .75f;
+            bulletTrail.startColor = newBulletColor;
+            newBulletColor.a = .01f;
+            bulletTrail.endColor = newBulletColor;
 
             if (reflectCount >= maxReflectCount)
             {
@@ -52,7 +70,6 @@ public class BulletController : MonoBehaviour
         
         if (other.collider.CompareTag("Enemy"))
         {
-            Destroy(other.gameObject);
             impulseSource.GenerateImpulse();
             Die();
         }
