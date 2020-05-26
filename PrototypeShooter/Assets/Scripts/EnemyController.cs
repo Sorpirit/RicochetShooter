@@ -5,7 +5,6 @@ namespace DefaultNamespace
     public class EnemyController : MonoBehaviour
     {
         [SerializeField] private GameObject enemyExploded;
-        [SerializeField] private GameObject addXPEffect;
 
         private void OnCollisionEnter2D(Collision2D other)
         {
@@ -21,7 +20,7 @@ namespace DefaultNamespace
         {
             Destroy(gameObject);
             GameObject explosion = Instantiate(enemyExploded, transform.position, Quaternion.Euler(0, 0, Random.Range(0, 360)));
-            Instantiate(addXPEffect, transform.position, Quaternion.identity);
+            PlayerScores.instace?.PlayAddXpEffect(pos);
             if (explosion.TryGetComponent(out SmashController smashController))
             {
                 smashController.EffectorPoint.transform.position = pos;

@@ -25,8 +25,8 @@ public class BonusWall : MonoBehaviour
             
             GameObject popup = Instantiate(addPointsText.gameObject, other.contacts[0].point, Quaternion.identity);
             FloatinPopup popupContent = popup.GetComponent<FloatinPopup>();
-            popupContent.SetText("+" + addScores);
-            PlayerScores.instace.AddScores(addScores);
+            popupContent.SetText("+" + addScores + "xp");
+            PlayerScores.instace?.AddScores(addScores);
         }
         
     }

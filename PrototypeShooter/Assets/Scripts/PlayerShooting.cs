@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using UnityEngine;
 
-public class PlayerShooting : MonoBehaviour
+public class PlayerShooting : MonoBehaviour,IPlayerShooting
 {
     [SerializeField] private GameObject bullet;
     [SerializeField] private Transform fierPoint;
@@ -14,17 +14,19 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private BulletCountUI bulletCountUi;
 
     [SerializeField] private LineRenderer projectTragectory;
-    
+
     [SerializeField] private AudioClip buletShootSound;
     [SerializeField] private AudioClip buletLastShootSound;
     [SerializeField] private AudioSource soundsAudio;
 
     [SerializeField] private Animator playerAnimator;
-    
-    
+
     private Camera cam;
     private float fierTimer;
     private int currentBullets;
+
+    private Vector2 lookDir;
+    private bool ControledByJoyStick;
 
     public int CurrentBullets
     {
@@ -43,14 +45,12 @@ public class PlayerShooting : MonoBehaviour
         bulletCountUi?.SetBulletsActiveAmount(currentBullets);
         
         cam = Camera.main;
+        playerLookDir = transform.up;
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && fierTimer >= fierRate && currentBullets > 0)
-        {
-            Fier();
-        }
+        lookDir = playerLookDir;
         Rotate();
         CalculateTrajectory();
         fierTimer += Time.deltaTime;
@@ -58,13 +58,18 @@ public class PlayerShooting : MonoBehaviour
 
     private void Rotate()
     {
-        Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-
-        transform.up = (mousePos - (Vector2) transform.position).normalized;
+        if(lookDir == Vector2.zero)
+            return;
+        
+        transform.up = lookDir.normalized;
+        //playerLookDir = transform.up;
     }
 
-    private void Fier()
+    private void Fire()
     {
+        if(!(fierTimer >= fierRate && currentBullets > 0))
+            return;
+        
         GameObject bulletTile = Instantiate(bullet,fierPoint.position,fierPoint.rotation);
 
         if (bulletTile.TryGetComponent(out Rigidbody2D rb))
@@ -94,5 +99,13 @@ public class PlayerShooting : MonoBehaviour
         projectTragectory.SetPosition(0,fierPoint.position);
         projectTragectory.SetPosition(1,firstHit.point);
         projectTragectory.SetPosition(2,secodPoint);
+    }
+
+    public Vector2 playerLookDir { get; set; }
+    public Transform body => transform;
+
+    public void Shoot()
+    {
+        Fire();
     }
 }

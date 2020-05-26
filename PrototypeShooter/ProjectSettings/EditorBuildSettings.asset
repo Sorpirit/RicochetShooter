@@ -6,6 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/TestInput.unity
+    guid: 00274cbc13f193c4b8f1eb998e57c487
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/ControlsTest.unity
+    guid: bc98843544edd924d8cbd98d7d5da745
+  - enabled: 1
+    path: Assets/Scenes/VerticalInputTest.unity
+    guid: 9ea6de5cfec9d4245b6bdf68eee82619
+  - enabled: 1
+    path: Assets/Scenes/DragTapControlTest.unity
+    guid: 06e8162ef7f388c4e83202d5d1ecb7fd
   m_configObjects: {}

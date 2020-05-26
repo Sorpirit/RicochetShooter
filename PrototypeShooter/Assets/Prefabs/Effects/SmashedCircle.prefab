@@ -14542,6 +14542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectorPoint: {fileID: 1561522769}
+  timeToDest: 2
 --- !u!1 &2250913609874637014
 GameObject:
   m_ObjectHideFlags: 0

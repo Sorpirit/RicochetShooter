@@ -66,11 +66,6 @@ public class LevelSpliter : MonoBehaviour
             StartCoroutine(EndGame());
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
         timer -= Time.deltaTime;
         timerUI.value = timer / sceneMaxTimer;
     }
