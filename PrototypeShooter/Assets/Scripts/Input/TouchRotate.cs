@@ -7,19 +7,12 @@ public class TouchRotate : MonoBehaviour
     [SerializeField] private SpriteRenderer touchVisualiser;
     [SerializeField] private float fadeOutTime;
     [SerializeField] private float rotationAcuracy;
-    [SerializeField] private float minTapTime;
-    [SerializeField] private float maxTapTime;
-    [SerializeField] private float maxMoveDelta;
-    
+    [SerializeField] private Vector2 screenDead;
+
     private IPlayerShooting shooting;
     private Camera cam;
     private bool isHiden = true;
-    
-    private bool isTaping;
-    private Vector2 tapPos;
-    private float deltaMove;
-    private float tapTimer;
-    
+
     private void Awake()
     {
         shooting = GetComponent<IPlayerShooting>();
@@ -28,41 +21,26 @@ public class TouchRotate : MonoBehaviour
 
     private void Update()
     {
-        
-        
         if (Input.touchCount == 0)
             return;
 
         Touch touch = Input.touches[0];
+
+        Vector2 touchPoint = cam.ScreenToViewportPoint(touch.position);
+        bool ignoreTouch = (touchPoint.x < screenDead.x || touchPoint.x > (1 - screenDead.x)) ||
+                           (touchPoint.y < screenDead.y || touchPoint.y > (1 - screenDead.y));
+        if (ignoreTouch)
+            return;
         
         Vector2 touchWorldPos = cam.ScreenToWorldPoint(touch.position);
         touchVisualiser.transform.position = touchWorldPos;
         switch (touch.phase)
         {
-            case TouchPhase.Began:
-                isTaping = true;
-                tapPos = touch.position;
-                tapTimer = 0;
-                deltaMove = 0;
-                break;
             case TouchPhase.Moved:
             {
-                if (isTaping)
-                {
-                    deltaMove += touch.deltaPosition.magnitude;
-                    if (deltaMove >= maxMoveDelta)
-                    {
-                        isTaping = false;
-                        Debug.Log("Brocken2");
-                    }
-                    else 
-                        break;
-                }
-
-
                 Vector2 toucgDir = touch.deltaPosition.normalized;
                 float axsis = Mathf.Abs(toucgDir.x) > Mathf.Abs(toucgDir.y) ? toucgDir.x : toucgDir.y;
-            
+
                 float inputDir = 1;
 
                 if (Mathf.Abs(toucgDir.x) > Mathf.Abs(toucgDir.y))
@@ -87,6 +65,7 @@ public class TouchRotate : MonoBehaviour
                         inputDir = -1;
                     }
                 }
+
                 if (axsis > 0)
                 {
                     inputDir *= 1;
@@ -112,32 +91,28 @@ public class TouchRotate : MonoBehaviour
             }
             case TouchPhase.Ended:
             {
-                if (isTaping && tapTimer >= minTapTime)
-                {
-                    shooting.Shoot();
-                }
-                else
-                {
-                    Debug.Log("Brocken3");
-                }
-                isTaping = false;
-                tapTimer = 0;
-                deltaMove = 0;
-                
                 if (!isHiden)
                     LeanTween.alpha(touchVisualiser.gameObject, 0, fadeOutTime);
                 isHiden = true;
                 break;
             }
         }
-        if(isTaping)
-            tapTimer += Time.deltaTime;
+    }
 
-        if (tapTimer > maxTapTime)
-        {
-            isTaping = false;
-            tapTimer = 0;
-            Debug.Log("Brocken1");
-        }
+    public void Shoot()
+    {
+        shooting.Shoot();
+    }
+    
+    private void OnDrawGizmosSelected()
+    {
+        if (cam == null)
+            cam = Camera.main;
+        //Vector2 touchPoint = cam.ScreenToViewportPoint(touch.position);
+        Color col = new Color(.7f, .2f, .05f, .35f);
+        Gizmos.color = col;
+        Vector2 maxViewPoint = Vector2.one - screenDead;
+        Vector2 size = cam.ViewportToWorldPoint(maxViewPoint);
+        Gizmos.DrawCube((Vector2) cam.transform.position, size * 2);
     }
 }
